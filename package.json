@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "bootstrap": "^5.1.1",
+    "postcss": "^8.3.6",
+    "postcss-loader": "^6.1.1",
+    "sass": "^1.42.0",
+    "sass-loader": "^12.1.0",
+    "webpack": "^5.53.0"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "popper.js": "^1.16.1"
+  }
+}
