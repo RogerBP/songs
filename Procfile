@@ -1,1 +1,1 @@
-web: MIX_ENV=prod mix phoneix.server
+web: mix phx.server
