@@ -6,6 +6,15 @@ div{
   margin: 0;
 }
 
+.foto-perfil{
+  height: 100px;
+  width: 100px;
+}
+
+.banner{
+  height: 100px;
+}
+
 .display{
   display: flex;
   padding: 10px;
