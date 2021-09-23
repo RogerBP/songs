@@ -34,5 +34,4 @@ npm-debug.log
 /priv/static/
 
 *.beam
-/config/*.secret.exs
 .elixir_ls/
