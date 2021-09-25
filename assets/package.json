@@ -3,7 +3,7 @@
   "description": " ",
   "license": "MIT",
   "scripts": {
-    "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild",
+    "deploy": "webpack --mode production",
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {

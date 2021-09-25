@@ -11,13 +11,9 @@ use Mix.Config
 # before starting your production server.
 config :songs, SongsWeb.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [scheme: "https", host: "agile-sea-80756.herokuapp.com", port: 443],
+  url: [scheme: "https", host: "songs-search.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
-
-# url:[scheme:"httpps", host: "agile-sea-80756.herokuapp.com", port:443],
-# force_ssl:[rewrite_on: [:x_forwarded_proto]],
-# secret_key_base: System.getenv("SECRET_KEY_BASE"),
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -58,4 +54,4 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
-# import_config "prod.secret.exs"
+import_config "prod.secret.exs"
