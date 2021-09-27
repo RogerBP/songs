@@ -1,85 +1,67 @@
 
 <form phx-submit="search">
-  <section class="phx-hero display">
-    <div class="container">
-      <div class="row">
-          <div class="col-3"><h1 class="vertical-center">Search your music:</h1></div>
-          <div class="col-7"><input type="text" name="query" value="<%= @query %>" autocomplete="on"/></div>
-          <div class="col-1"><button class="btn btn-primary" type="submit" phx-disable-with="Searching...">Pesquisar</button></div>
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title">Search your music</h1>
+      <div class="input-group-lg">
+        <input type="text" class="form-control" name="query" value="<%= @query %>" autocomplete="on"/>
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit" phx-disable-with="Searching...">Search</button>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 </form>
 
-<section class="phx-hero display">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Artists</h1>
-      </div>
+<div class="card">
+    <div class="card-body">
+      <h1 class="card-title">Artists</h1>
     </div>
-</section>
-<section class="phx-hero display">
-  <div class="container">
-    <div class="row">
-      <%= for art <- @artists do %>
-        <div class="col-2">
-          <div class="container" phx-click="artist_click" phx-value-art=<%= art.id %>>
-            <div class="row artist">
-              <div class="col"><img src="<%= art.img %>" class="rounded-circle"></div>
-            </div>
-            <div class = "row"><div class="col"><h3><%= art.name %></h3></div></div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</section>
+</div>
 
-<section class="phx-hero display">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Albuns</h1>
+<div class="display-artists">
+  <%= for art <- @artists do %>
+    <div class="card card-artist" phx-click="artist_click" phx-value-art=<%= art.id %>>
+      <img class="card-img img-artist rounded-circle" src="<%= art.img %>">
+      <div class="card-body">
+        <h3><%= art.name %></h3>
       </div>
     </div>
-</section>
-<section class="phx-hero display">
-  <div class="container">
-    <div class="row">
-      <%= for album <- @albums do %>
-        <div class="col-2">
-          <div class="container" phx-click="album_click" phx-value-album=<%= album.id %>>
-            <div class="row album"><div class="col"><img src="<%= album.img %>"></div></div>
-            <div class = "row"><div class="col"><h3><%= album.name %></h3></div></div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</section>
+  <% end %>
+</div>
 
-<section class="phx-hero display">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Songs</h1>
+<div class="card">
+    <div class="card-body">
+      <h1 class="card-title">Albums</h1>
+    </div>
+</div>
+
+<div class="display-artists">
+  <%= for album <- @albums do %>
+    <div class="card card-artist" phx-click="album_click" phx-value-album=<%= album.id %>>
+      <img class="card-img img-artist" src="<%= album.img %>">
+      <div class="card-body">
+        <h3><%= album.name %></h3>
       </div>
     </div>
-</section>
-<section class="phx-hero display">
-  <div class="container">
-    <div class = "row">
-      <%= for track <- @tracks do %>
-        <div class = "col-12">
-          <%= link track.name, to: track.link, target: "_blank", class: "btn btn-outline-dark btn-lg btn-block" %>
-        </div>
-        <div class = "col-12">
-          <audio controls>
-            <source src="<%= track.preview %>" type="audio/mpeg">
-          </audio>
-        </div>
-      <% end %>
+  <% end %>
+</div>
+
+<div class="card">
+    <div class="card-body">
+      <h1 class="card-title">Songs</h1>
     </div>
-  </div>
-</section>
+</div>
+
+<div class="display-artists">
+  <%= for track <- @tracks do %>
+    <div class="card card-track">
+      <div class="card-body">
+        <%= link track.name, to: track.link, target: "_blank", class: "btn btn-outline-dark btn-lg btn-block" %>
+        <audio controls>
+          <source src="<%= track.preview %>" type="audio/mpeg">
+        </audio>
+      </div>
+    </div>
+  <% end %>
+</div>

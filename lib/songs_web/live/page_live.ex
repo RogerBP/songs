@@ -8,116 +8,36 @@ defmodule SongsWeb.PageLive do
 
   @impl true
   def handle_event("search", evento, socket) do
-    %{"query" => query} = evento
-    q = URI.encode(query)
-    result = Tesla.get("https://api.deezer.com/search?q=artist:'#{q}'")
-    check_result(result, socket, query)
+    SongsWeb.SongsSearch.search(self(), evento)
+    {:noreply, assign(socket, tracks: [], albums: [], artists: [])}
+    # {:noreply, socket}
   end
 
   def handle_event("artist_click", evento, socket) do
-    %{"art" => id} = evento
-    url = "https://api.deezer.com/artist/#{id}/albums"
-    result = Tesla.get(url)
-
-    case result do
-      {:ok, response} ->
-        map = JSON.decode(response.body)
-        {:ok, dados} = map
-        albums_list = dados["data"]
-
-        albums =
-          Enum.map(albums_list, fn d ->
-            %{
-              id: d["id"],
-              name: d["title"],
-              img: d["cover_medium"]
-            }
-          end)
-
-        {:noreply, socket |> assign(albums: albums)}
-
-      {:error, :invalid_uri} ->
-        nil
-        {:noreply, assign(socket, [])}
-    end
+    SongsWeb.Albums.get_albums(self(), evento)
+    {:noreply, assign(socket, tracks: [], albums: [], artists: [])}
+    # {:noreply, socket}
   end
 
   def handle_event("album_click", evento, socket) do
-    %{"album" => id} = evento
-    url = "https://api.deezer.com/album/#{id}/tracks"
-    result = Tesla.get(url)
-
-    case result do
-      {:ok, response} ->
-        map = JSON.decode(response.body)
-        {:ok, dados} = map
-        tracks_list = dados["data"]
-
-        tracks =
-          Enum.map(tracks_list, fn d ->
-            %{
-              id: d["id"],
-              name: d["title"],
-              link: d["link"],
-              preview: d["preview"]
-            }
-          end)
-
-        {:noreply, socket |> assign(tracks: tracks)}
-
-      {:error, :invalid_uri} ->
-        nil
-        {:noreply, assign(socket, [])}
-    end
+    SongsWeb.Tracks.get_tracks(self(), evento)
+    {:noreply, assign(socket, tracks: [], albums: [], artists: [])}
+    # {:noreply, socket}
   end
 
-  defp check_result({:error, :invalid_uri}, socket, query) do
-    {:noreply, socket |> assign(songs: [], query: query)}
+  @impl true
+  def handle_info({:artists, artists}, socket) do
+    # IO.puts("handle_info artists")
+    {:noreply, assign(socket, artists: artists)}
   end
 
-  defp check_result({:ok, response}, socket, query) do
-    {:ok, map} = JSON.decode(response.body)
-    dados = map["data"]
-    # IO.inspect(dados)
+  def handle_info({:albums, albums}, socket) do
+    # IO.puts("handle_info albums")
+    {:noreply, assign(socket, albums: albums)}
+  end
 
-    artists =
-      Enum.map(dados, fn d ->
-        %{
-          id: d["artist"]["id"],
-          name: d["artist"]["name"],
-          img: d["artist"]["picture_medium"],
-          link: d["artist"]["link"]
-        }
-      end)
-      |> Enum.uniq()
-
-    albums =
-      Enum.map(dados, fn d ->
-        %{
-          id: d["album"]["id"],
-          name: d["album"]["title"],
-          img: d["album"]["cover_medium"]
-        }
-      end)
-      |> Enum.uniq()
-
-    tracks =
-      Enum.map(dados, fn d ->
-        %{
-          id: d["id"],
-          name: d["title"],
-          link: d["link"],
-          preview: d["preview"]
-        }
-      end)
-
-    {:noreply,
-     socket
-     |> assign(
-       query: query,
-       artists: artists,
-       albums: albums,
-       tracks: tracks
-     )}
+  def handle_info({:tracks, tracks}, socket) do
+    # IO.puts("handle_info tracks")
+    {:noreply, assign(socket, tracks: tracks)}
   end
 end

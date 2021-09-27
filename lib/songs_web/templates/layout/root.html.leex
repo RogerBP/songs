@@ -10,22 +10,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">    <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <div class="row">
-          <div class="col">
-            <a href="https://www.youtube.com/c/Sabecontar/">
-              <img src="<%= Routes.static_path(@conn, "/images/banner.png") %>" alt="Sabe Contar?" class="banner"/>
-            </a>
-          </div>
-          <div class="col-2">
-            <a href="https://www.youtube.com/c/Sabecontar/">
-              <img src="<%= Routes.static_path(@conn, "/images/perfil.png") %>" alt="Sabe Contar?" class="rounded-circle foto-perfil"/>
-            </a>
-          </div>
+    <div class = "bg bg-dark">
+      <header>
+        <div class="card card-img bg-dark">
+          <a href="https://www.youtube.com/c/Sabecontar/">
+            <img class="card-img banner" src="<%= Routes.static_path(@conn, "/images/banner-foto.jpg") %>" alt="Sabe Contar?"/>
+          </a>
         </div>
-      </section>
-    </header>
-    <%= @inner_content %>
+      </header>
+      <%= @inner_content %>
+    </div>
   </body>
 </html>
