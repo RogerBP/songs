@@ -7,9 +7,9 @@ defmodule SongsWeb.PageLive do
      assign(socket,
        query: "",
        loading: false,
-       preview: false,
-       preview_song: "Song name",
-       preview_link: "",
+       #  preview: false,
+       #  preview_song: "Song name",
+       #  preview_link: "",
        tracks: [],
        albums: [],
        artists: [],
@@ -81,35 +81,35 @@ defmodule SongsWeb.PageLive do
      )}
   end
 
-  def handle_event("preview_click", evento, socket) do
-    %{"link" => link, "song" => song} = evento
-    send(self(), {:preview_click, link, song})
+  # def handle_event("preview_click", evento, socket) do
+  #   %{"link" => link, "song" => song} = evento
+  #   send(self(), {:preview_click, link, song})
 
-    {:noreply,
-     assign(socket,
-       loading: true,
-       preview: false,
-       preview_song: "",
-       preview_link: "",
-       art_act: "",
-       alb_act: "",
-       sng_act: "active",
-       art_tab: "",
-       alb_tab: "",
-       sng_tab: "show active"
-     )}
-  end
+  #   {:noreply,
+  #    assign(socket,
+  #      loading: true,
+  #      preview: false,
+  #      preview_song: "",
+  #      preview_link: "",
+  #      art_act: "",
+  #      alb_act: "",
+  #      sng_act: "active",
+  #      art_tab: "",
+  #      alb_tab: "",
+  #      sng_tab: "show active"
+  #    )}
+  # end
 
   @impl true
-  def handle_info({:preview_click, link, song}, socket) do
-    {:noreply,
-     assign(socket,
-       loading: false,
-       preview: true,
-       preview_song: song,
-       preview_link: link
-     )}
-  end
+  # def handle_info({:preview_click, link, song}, socket) do
+  #   {:noreply,
+  #    assign(socket,
+  #      loading: false,
+  #      preview: true,
+  #      preview_song: song,
+  #      preview_link: link
+  #    )}
+  # end
 
   def handle_info({:search, query}, socket) do
     data = SongsWeb.SongsSearch.search(query)
