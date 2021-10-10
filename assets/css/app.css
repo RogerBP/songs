@@ -6,6 +6,10 @@ div{
   margin: 0;
 }
 
+.nav-link{
+  font-size: 18px;
+}
+
 .pointer {cursor: pointer;}
 
 .bg{
@@ -36,13 +40,47 @@ div{
   flex-flow: row wrap;  
 }
 
+.btn-track{
+  width: 70%;
+}
+
+.btn-preview{
+  display: flex;
+  align-items: center;
+  width: 20%;
+}
+
+.modal-dialog {
+  transition: none!important;
+}
+
 .card-artist {
   width: 50%;
   cursor: pointer;    
 }
-.card-track {
-  width: 50%;
+
+.display-center{
+  display: flex;
+  justify-content: center;
 }
+.card-body-artist{
+  display: grid;
+  justify-content: center;
+}
+
+.card-track {
+  display: flex;
+  justify-content: space-around;
+}
+
+.display-preview{
+  flex-direction: column;
+  width: 100%;
+}
+.card-preview {
+  width: 100%;
+}
+
 
 @media all and (max-width: 500px) {
   .display-artists{

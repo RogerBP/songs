@@ -1,26 +1,26 @@
 defmodule SongsWeb.Albums do
-  def get_albums(sender, evento) do
-    %{"art" => id} = evento
-    SongsWeb.Artists.get_artist(sender, id)
-    url = "https://api.deezer.com/artist/#{id}/albums"
-    result = Tesla.get(url)
-    check_result(sender, result)
-  end
-
-  def get_album(sender, id) do
+  def get_album(id) do
     url = "https://api.deezer.com/album/#{id}"
     response = Tesla.get(url)
-    check_result(sender, response)
+    return_albums(response)
   end
 
-  defp check_result(_sender, {:error, :invalid_uri}), do: nil
+  def get_albums(art_id) do
+    artists = SongsWeb.Artists.get_artist(art_id)
+    url = "https://api.deezer.com/artist/#{art_id}/albums"
+    response = Tesla.get(url)
+    map = return_albums(response)
+    %{albums: map.albums, artists: artists}
+  end
 
-  defp check_result(sender, {:ok, response}) do
+  defp return_albums({:error, :invalid_uri}), do: %{albums: [], artists: []}
+
+  defp return_albums({:ok, response}) do
     {:ok, dados} = JSON.decode(response.body)
-    check_map(sender, dados)
+    check_map(dados)
   end
 
-  defp check_map(sender, %{"data" => albums_list}) do
+  defp check_map(%{"data" => albums_list}) do
     albums =
       Enum.map(albums_list, fn d ->
         %{
@@ -30,10 +30,10 @@ defmodule SongsWeb.Albums do
         }
       end)
 
-    send(sender, {:albums, albums})
+    %{albums: albums, artists: []}
   end
 
-  defp check_map(sender, map) do
+  defp check_map(map) do
     artists = [
       %{
         id: map["artist"]["id"],
@@ -50,7 +50,6 @@ defmodule SongsWeb.Albums do
       }
     ]
 
-    send(sender, {:albums, albums})
-    send(sender, {:artists, artists})
+    %{albums: albums, artists: artists}
   end
 end

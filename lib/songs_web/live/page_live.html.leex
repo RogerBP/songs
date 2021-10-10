@@ -13,55 +13,112 @@
   </div>
 </form>
 
-<div class="card">
-    <div class="card-body">
-      <h1 class="card-title">Artists</h1>
+<%= if @loading do %>
+<div class="d-flex justify-content-center">
+  <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<% end %>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link <%= @art_act %>" id="artists-tab" data-bs-toggle="tab" data-bs-target="#artists" type="button" role="tab" aria-controls="artists" aria-selected="true">Artists</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link <%= @alb_act %>" id="albums-tab" data-bs-toggle="tab" data-bs-target="#albums" type="button" role="tab" aria-controls="albums" aria-selected="false">Albums</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link <%= @sng_act %>" id="songs-tab" data-bs-toggle="tab" data-bs-target="#songs" type="button" role="tab" aria-controls="songs" aria-selected="false">Songs</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade <%= @art_tab %>" id="artists" role="tabpanel" aria-labelledby="artists-tab">
+    <div class="display-artists">
+      <%= for art <- @artists do %>
+        <div class="card card-artist" phx-click="artist_click" phx-value-art=<%= art.id %>>
+          <div class="card-body">
+            <div class="display-center"><img class="card-img-top img-artist rounded-circle" src="<%= art.img %>"></div>
+            <div class="display-center"><h3 class="card-title"><%= art.name %></h3></div>
+          </div>
+        </div>
+      <% end %>
     </div>
+  </div>
+  <div class="tab-pane fade  <%= @alb_tab %>" id="albums" role="tabpanel" aria-labelledby="albums-tab">
+    <div class="display-artists">
+      <%= for album <- @albums do %>
+        <div class="card card-artist" phx-click="album_click" phx-value-album=<%= album.id %>>
+          <div class="card-body card-body-artist">
+            <div class="display-center"><img class="card-img img-artist" src="<%= album.img %>"></div>
+            <div class="display-center"><h3><%= album.name %></h3></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="tab-pane fade  <%= @sng_tab %>" id="songs" role="tabpanel" aria-labelledby="songs-tab">
+    <div class="display-artists">
+      <%= for track <- @tracks do %>
+        <div class="card card-artist">
+          <div class="card-body card-track">
+            <%= link track.name, to: track.link, target: "_blank", class: "btn btn-outline-dark btn-lg btn-block btn-track" %>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#previewModal"
+                data-bs-songName="<%= track.name %>"
+                data-bs-songLink=<%= track.preview %>>Preview</button>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
 
-<div class="display-artists">
-  <%= for art <- @artists do %>
-    <div class="card card-artist" phx-click="artist_click" phx-value-art=<%= art.id %>>
-      <img class="card-img img-artist rounded-circle" src="<%= art.img %>">
-      <div class="card-body">
-        <h3><%= art.name %></h3>
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    </div>
-  <% end %>
-</div>
-
-<div class="card">
-    <div class="card-body">
-      <h1 class="card-title">Albums</h1>
-    </div>
-</div>
-
-<div class="display-artists">
-  <%= for album <- @albums do %>
-    <div class="card card-artist" phx-click="album_click" phx-value-album=<%= album.id %>>
-      <img class="card-img img-artist" src="<%= album.img %>">
-      <div class="card-body">
-        <h3><%= album.name %></h3>
-      </div>
-    </div>
-  <% end %>
-</div>
-
-<div class="card">
-    <div class="card-body">
-      <h1 class="card-title">Songs</h1>
-    </div>
-</div>
-
-<div class="display-artists">
-  <%= for track <- @tracks do %>
-    <div class="card card-track">
-      <div class="card-body">
-        <%= link track.name, to: track.link, target: "_blank", class: "btn btn-outline-dark btn-lg btn-block" %>
-        <audio controls>
-          <source src="<%= track.preview %>" type="audio/mpeg">
+      <div class="modal-body">
+        <h3 class="song-name"></h3>
+        <audio controls controlsList="nodownload">
+          <source src="" type="audio/mpeg">
         </audio>
       </div>
+      <div class="modal-footer">
+        <button onclick="closeModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
-  <% end %>
+  </div>
 </div>
+
+<script type="text/javascript">
+  var modal = document.getElementById('previewModal');
+  modal.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var songName = button.getAttribute('data-bs-songName');
+    var songLink = button.getAttribute('data-bs-songLink');
+    var modalSongName = modal.querySelector('.modal-body .song-name');
+    modalSongName.innerHTML = songName;
+
+    var sound = modal.querySelector('.modal-body audio');
+    if (sound) sound.remove();
+
+    sound = document.createElement('audio');
+    sound.id = 'audio-player';
+    sound.controls = 'controls';
+    sound.src = songLink;
+    sound.type = 'audio/mpeg';
+    modalBody = modal.querySelector('.modal-body');
+    modalBody.appendChild(sound);
+    sound.play();
+  })
+
+  function closeModal()
+  {
+    var sound = modal.querySelector('.modal-body audio');
+    if (sound) sound.pause();
+  }
+</script>
