@@ -2,14 +2,13 @@
 
 29/05/2023 / Teste commit direto pelo GitHub
 
--------------------------
+g.=========
 -- Treinamento / RogerBP 
--------------------------
+g.=========
 -- Treinamento / Games
--------------------------
+g.=========
 -- Treinamento / RogerBP  **
--------------------------
-
+g.=========
 
 To start your Phoenix server:
 
